@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Практична 2</title>
+</head>
+
+<body>
+    <form>
+        <label>Донецьке газове вугілля марки ГР, т:</label>
+        <input id="coal" value="1096363" type="number">
+
+        <label>Високосірчистий мазут марки 40, т:</label>
+        <input id="fuelOil" value="70945" type="number">
+
+        <label>Природний газ із газопроводу Уренгой-Ужгород, м<sup>3</sup>:</label>
+        <input id="gas" value="84762000" type="number">
+
+        <button type="button" onclick="calculate()">Розрахувати</button>
+    </form>
+    <p id="result" class="result"></p>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

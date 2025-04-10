@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Практична 1</title>
+</head>
+
+<body>
+    <h2>Завдання 1</h2>
+    <form>
+        <label>Водень (H<sup>P</sup>), %:</label>
+        <input id="hydrogen-1" value="1.9" type="number">
+
+        <label>Вуглець (C<sup>P</sup>), %:</label>
+        <input id="carbon-1" value="21.1" type="number">
+
+        <label>Сірка (S<sup>P</sup>), %:</label>
+        <input id="sulfur-1" value="2.6" type="number">
+
+        <label>Азот (N<sup>P</sup>), %:</label>
+        <input id="nitrogen-1" value="0.2" type="number">
+
+        <label>Кисень (O<sup>P</sup>), %:</label>
+        <input id="oxygen-1" value="7.1" type="number">
+
+        <label>Волога (W), %:</label>
+        <input id="moisture-1" value="53" type="number">
+
+        <label>Зола (A), %:</label>
+        <input id="ash-1" value="14.1" type="number">
+
+        <button type="button" onclick="calculate1()">Розрахувати</button>
+    </form>
+    <p id="result-1" class="result"></p>
+
+    <h2>Завдання 2</h2>
+    <form>
+        <label>Вуглець (C<sup>r</sup>), %:</label>
+        <input id="carbon-2" value="85.5" type="number">
+
+        <label>Водень (H<sup>r</sup>), %:</label>
+        <input id="hydrogen-2" value="11.2" type="number">
+
+        <label>Кисень (O<sup>r</sup>), %:</label>
+        <input id="oxygen-2" value="0.8" type="number">
+
+        <label>Сірка (S<sup>r</sup>), %:</label>
+        <input id="sulfur-2" value="2.5" type="number">
+
+        <label>Нижча теплота згоряння горючої маси (Q<sub>н</sub><sup>r</sup>), МДж/кг:</label>
+        <input id="q-combustible-2" value="40.4" type="number">
+
+        <label>Вологість робочої маси (W<sup>p</sup>), %:</label>
+        <input id="moisture-2" value="2.0" type="number">
+
+        <label>Зольність сухої маси (A<sup>d</sup>), %:</label>
+        <input id="ash-2" value="0.15" type="number">
+
+        <label>Вміст ванадію (V), мг/кг:</label>
+        <input id="vanadium-2" value="333.3" type="number" step="1">
+
+        <button type="button" onclick="calculate2()">Розрахувати</button>
+    </form>
+    <p id="result-2" class="result"></p>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
