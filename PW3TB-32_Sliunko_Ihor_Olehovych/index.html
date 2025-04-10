@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Практична 3</title>
+</head>
+
+<body>
+    <form>
+        <label>Середньодобова потужність P<sup>c</sup>, МВт:</label>
+        <input id="power" value="5" type="number">
+
+        <label>Середньоквадратичне відхилення, МВт:</label>
+        <input id="standard-deviation" value="1" type="number">
+
+        <label>Середньоквадратичне відхилення після вдосконалення, МВт:</label>
+        <input id="standard-deviation-improved" value="0.25" type="number">
+
+        <label>Вартість електроенергії, грн/кВт*год:</label>
+        <input id="energy-price" value="7" type="number">
+
+        <button type="button" onclick="calculate()">Розрахувати</button>
+    </form>
+    <p id="result" class="result"></p>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

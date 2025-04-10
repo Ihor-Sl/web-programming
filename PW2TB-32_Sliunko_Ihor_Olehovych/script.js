@@ -34,4 +34,3 @@ function calculate() {
         ${grossEmmisionGas.toFixed(2)} т<br>
     `
 }
-І
