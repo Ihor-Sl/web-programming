@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Практична 4</title>
+</head>
+
+<body>
+    <h2>Завдання 1</h2>
+    <form>
+        <label>Напруга, кВ:</label>
+        <input id="voltage" value="10" type="number">
+
+        <label>Струм КЗ, кА:</label>
+        <input id="current-sc" value="2.5" type="number">
+
+        <label>Фіктивний час вимикання струму КЗ, с:</label>
+        <input id="fictitious-time-sc" value="2.5" type="number">
+
+        <label>Потужність ТП, кв * А:</label>
+        <input id="power" value="2000" type="number">
+
+        <label>Розрахункове навантаження, кв * А:</label>
+        <input id="load" value="1300" type="number">
+
+        <label>T<sub>M</sub> год:</label>
+        <input id="T_M" value="4000" type="number">
+
+        <button type="button" onclick="calculate_1()">Розрахувати</button>
+    </form>
+    <p id="result1" class="result"></p>
+
+    <h2>Завдання 2</h2>
+    <form>
+        <label>Потужність КЗ, МВ*А:</label>
+        <input id="power-sc" value="200" type="number">
+
+        <button type="button" onclick="calculate_2()">Розрахувати</button>
+    </form>
+    <p id="result2" class="result"></p>
+
+    <h2>Завдання 3</h2>
+    <form>
+        <label>Максимальна напруга короткого замикання:</label>
+        <input id="voltage-max-sc" value="110" type="number">
+
+        <label>Номінальна напруга вольтажу:</label>
+        <input id="voltage-nominal" value="35" type="number">
+
+        <label>Номінальна потужність трансформатора:</label>
+        <input id="power-transformer-nominal" value="20" type="number">
+
+        <label>Активний опір статора:</label>
+        <input id="resistance-stator-active" value="10.65" type="number">
+
+        <label>Реактивний опір статора:</label>
+        <input id="resistance-stator-reactive" value="20.02" type="number">
+
+        <label>Мінімальний активний опір статора:</label>
+        <input id="resistance-stator-active-min" value="34.88" type="number">
+
+        <label>Мінімальний реактивний опір статора:</label>
+        <input id="resistance-stator-reactive-min" value="65.68" type="number">
+
+        <button type="button" onclick="calculate_3()">Розрахувати</button>
+    </form>
+    <p id="result3" class="result"></p>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
