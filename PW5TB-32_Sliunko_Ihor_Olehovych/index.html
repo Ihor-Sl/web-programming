@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Практична 5</title>
+</head>
+
+<body>
+    <h2>Завдання 1</h2>
+    <form>
+        <label>ПЛ-110 кВ, км:</label>
+        <input id="PL-110" value="10" type="number">
+
+        <label>V-110 кВ, од:</label>
+        <input id="V-110" value="1" type="number">
+
+        <label>Т-110 кВ, од:</label>
+        <input id="T-110" value="1" type="number">
+
+        <label>V-10 кВ (малооливний), од:</label>
+        <input id="V-10" value="1" type="number">
+
+        <label>Збірні шини 10кВ на 1 приєднання, од:</label>
+        <input id="BUS-10" value="6" type="number">
+
+        <button type="button" onclick="calculate_1()">Розрахувати</button>
+    </form>
+    <p id="result1" class="result"></p>
+
+    <h2>Завдання 2</h2>
+    <form>
+        <label>З<sub>пер.а</sub> грн/кВ*год:</label>
+        <input id="Z_per_a" value="23.6" type="number">
+
+        <label>З<sub>пер.п</sub> грн/кВ*год:</label>
+        <input id="Z_per_p" value="17.6" type="number">
+
+        <label>ω:</label>
+        <input id="w" value="0.01" type="number">
+
+        <label>t<sub>В</sub>:</label>
+        <input id="t_v" value="0.045" type="number">
+
+        <label>k<sub>П</sub>:</label>
+        <input id="k_p" value="0.004" type="number">
+
+        <label>P<sub>М</sub>:</label>
+        <input id="P_M" value="5120" type="number">
+
+        <label>T<sub>М</sub>:</label>
+        <input id="T_M" value="6451" type="number">
+
+        <button type="button" onclick="calculate_2()">Розрахувати</button>
+    </form>
+    <p id="result2" class="result"></p>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
