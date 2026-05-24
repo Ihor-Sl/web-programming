@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Квест «Чого нас навчають свята» · 3 клас</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f0e4cb; --bg2:#e6d4ad; --card:#fffaef; --card2:#fdf2da;
+    --ink:#463324; --ink-soft:#6f5640;
+    --red:#d24a2c; --red-dk:#a8351c;
+    --teal:#1f7a6b; --teal-dk:#155c50;
+    --gold:#e6a728; --gold-dk:#c7891a;
+    --green:#5f9a3c; --green-dk:#477329;
+    --line: #c9b48a;
+    --shadow: 0 8px 0 rgba(70,51,36,.18), 0 14px 26px rgba(70,51,36,.22);
+    --shadow-sm: 0 4px 0 rgba(70,51,36,.16);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:'Nunito','Trebuchet MS',sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 12% 8%, rgba(255,255,255,.5), transparent 38%),
+      radial-gradient(circle at 88% 92%, rgba(255,255,255,.4), transparent 40%),
+      var(--bg);
+    background-attachment:fixed;
+    min-height:100%;
+    -webkit-tap-highlight-color:transparent;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; opacity:.5;
+    background-image:radial-gradient(rgba(70,51,36,.06) 1px, transparent 1px);
+    background-size:22px 22px;
+  }
+  h1,h2,h3,.title{font-family:'Fredoka','Trebuchet MS',sans-serif; font-weight:700; line-height:1.12;}
+  .wrap{max-width:920px; margin:0 auto; padding:18px 16px 60px; position:relative;}
+
+  /* ---------- SCREENS ---------- */
+  .screen{display:none; animation:fade .45s ease both;}
+  .screen.active{display:block;}
+  @keyframes fade{from{opacity:0; transform:translateY(14px);}to{opacity:1; transform:none;}}
+
+  /* ---------- TOP BAR ---------- */
+  .topbar{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; flex-wrap:wrap;}
+  .crumbs{font-family:'Fredoka'; font-weight:600; color:var(--ink-soft); font-size:15px;}
+  .stars{display:flex; gap:5px; align-items:center; background:var(--card);
+    border:3px solid var(--ink); border-radius:40px; padding:5px 12px; box-shadow:var(--shadow-sm);}
+  .stars b{font-family:'Fredoka'; font-size:15px;}
+  .star{font-size:18px; filter:grayscale(1) opacity(.35); transition:.3s;}
+  .star.on{filter:none; animation:pop .4s ease;}
+  @keyframes pop{0%{transform:scale(.2) rotate(-40deg);}60%{transform:scale(1.35);}100%{transform:scale(1);}}
+
+  /* ---------- BUTTONS ---------- */
+  .btn{font-family:'Fredoka'; font-weight:600; font-size:18px; cursor:pointer;
+    border:3px solid var(--ink); border-radius:16px; padding:13px 26px; color:#fff;
+    background:var(--red); box-shadow:var(--shadow-sm); transition:transform .12s, box-shadow .12s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn:active{transform:translateY(3px); box-shadow:0 1px 0 rgba(70,51,36,.16);}
+  .btn.teal{background:var(--teal);}
+  .btn.gold{background:var(--gold); color:var(--ink);}
+  .btn.green{background:var(--green);}
+  .btn.ghost{background:var(--card); color:var(--ink);}
+  .btn.sm{font-size:15px; padding:9px 16px; border-radius:13px;}
+  .btn:disabled{opacity:.45; cursor:not-allowed; transform:none;}
+
+  /* ---------- INTRO ---------- */
+  .hero{background:var(--card); border:4px solid var(--ink); border-radius:30px;
+    box-shadow:var(--shadow); padding:34px 30px; text-align:center; position:relative; overflow:hidden;}
+  .hero::before{content:""; position:absolute; top:-60px; right:-60px; width:200px; height:200px;
+    background:radial-gradient(circle, rgba(230,167,40,.4), transparent 70%); border-radius:50%;}
+  .hero .ribbon{display:inline-block; background:var(--teal); color:#fff; font-family:'Fredoka';
+    font-weight:600; padding:6px 18px; border-radius:30px; border:3px solid var(--ink);
+    font-size:14px; letter-spacing:.4px; box-shadow:var(--shadow-sm);}
+  .hero h1{font-size:clamp(30px,6vw,46px); margin:16px 0 6px; color:var(--red);}
+  .hero .sub{font-size:18px; color:var(--ink-soft); font-weight:700; margin-bottom:6px;}
+  .owl{font-size:78px; line-height:1; display:inline-block; animation:bob 3s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-10px) rotate(3deg);}}
+  .speech{background:var(--card2); border:3px dashed var(--gold-dk); border-radius:20px;
+    padding:16px 20px; margin:18px auto; max-width:560px; font-size:17px; font-weight:700;}
+  .info-grid{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin:18px 0;}
+  .chip-i{background:var(--card2); border:3px solid var(--ink); border-radius:14px;
+    padding:8px 14px; font-family:'Fredoka'; font-weight:600; font-size:14px;}
+  .chip-i b{display:block; color:var(--teal-dk); font-size:13px;}
+
+  /* ---------- MAP ---------- */
+  .map-head{text-align:center; margin-bottom:8px;}
+  .map-head h2{font-size:30px; color:var(--red);}
+  .map-head p{font-weight:700; color:var(--ink-soft); margin-top:4px;}
+  .map{position:relative; width:100%; aspect-ratio:5/6.4; max-width:640px; margin:6px auto 0;
+    background:var(--card); border:4px solid var(--ink); border-radius:28px;
+    box-shadow:var(--shadow); overflow:hidden;}
+  .map::after{content:"🧭"; position:absolute; top:10px; right:14px; font-size:30px; opacity:.8;}
+  .map svg{position:absolute; inset:0; width:100%; height:100%;}
+  .node{position:absolute; transform:translate(-50%,-50%); width:78px; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; gap:3px; text-align:center;}
+  .node .dot{width:62px; height:62px; border-radius:50%; border:4px solid var(--ink);
+    background:var(--bg2); display:flex; align-items:center; justify-content:center;
+    font-size:30px; box-shadow:var(--shadow-sm); transition:transform .15s;}
+  .node .lbl{font-family:'Fredoka'; font-weight:600; font-size:12.5px;
+    background:var(--card); border:2.5px solid var(--ink); border-radius:10px; padding:2px 7px;}
+  .node[data-state="locked"]{opacity:.55; cursor:not-allowed;}
+  .node[data-state="open"] .dot{background:var(--gold); animation:beat 1.6s infinite;}
+  .node[data-state="done"] .dot{background:var(--green); color:#fff;}
+  .node[data-state="open"]:hover .dot,.node[data-state="done"]:hover .dot{transform:scale(1.12);}
+  @keyframes beat{0%,100%{box-shadow:var(--shadow-sm);}50%{box-shadow:0 4px 0 rgba(70,51,36,.16),0 0 0 9px rgba(230,167,40,.32);}}
+  .node .num{position:absolute; top:-8px; left:-8px; width:24px; height:24px; border-radius:50%;
+    background:var(--red); color:#fff; border:3px solid var(--ink); font-family:'Fredoka';
+    font-weight:700; font-size:12px; display:flex; align-items:center; justify-content:center;}
+
+  /* ---------- STATION CARD ---------- */
+  .station{background:var(--card); border:4px solid var(--ink); border-radius:26px;
+    box-shadow:var(--shadow); padding:22px 22px 26px;}
+  .st-head{display:flex; gap:12px; align-items:center; margin-bottom:6px;}
+  .st-badge{flex:none; width:54px; height:54px; border-radius:14px; border:3px solid var(--ink);
+    background:var(--gold); display:flex; align-items:center; justify-content:center; font-size:28px;}
+  .st-head h2{font-size:23px; color:var(--red);}
+  .st-head .stp{font-weight:700; color:var(--ink-soft); font-size:13px;}
+  .group-tip{display:flex; gap:9px; align-items:flex-start; background:var(--card2);
+    border:3px dashed var(--teal-dk); border-radius:16px; padding:11px 14px; margin:12px 0 16px;
+    font-weight:700; font-size:15px;}
+  .group-tip .gi{font-size:22px; flex:none;}
+  .task-q{font-family:'Fredoka'; font-weight:600; font-size:18px; margin:14px 0 10px;}
+
+  /* matching */
+  .match{display:grid; grid-template-columns:1fr 1fr; gap:10px 22px;}
+  .mcol{display:flex; flex-direction:column; gap:10px;}
+  .mcol h4{font-family:'Fredoka'; text-align:center; color:var(--teal-dk); font-size:14px;}
+  .mcard{border:3px solid var(--ink); border-radius:14px; padding:11px 12px; cursor:pointer;
+    font-weight:700; font-size:15px; background:var(--card2); transition:transform .12s, background .2s;
+    box-shadow:var(--shadow-sm); text-align:center;}
+  .mcard:hover{transform:translateY(-2px);}
+  .mcard.sel{background:var(--gold); transform:translateY(-2px);}
+  .mcard.matched{background:var(--green); color:#fff; cursor:default; pointer-events:none; box-shadow:none; opacity:.85;}
+  .mcard.shake{animation:shake .4s;}
+  @keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-7px);}40%,80%{transform:translateX(7px);}}
+
+  /* options (quiz / emoji) */
+  .opts{display:flex; flex-direction:column; gap:11px;}
+  .opt{border:3px solid var(--ink); border-radius:15px; padding:13px 16px; cursor:pointer;
+    font-weight:700; font-size:16px; background:var(--card2); box-shadow:var(--shadow-sm);
+    transition:transform .12s, background .2s; text-align:left;}
+  .opt:hover{transform:translateY(-2px);}
+  .opt.correct{background:var(--green); color:#fff; pointer-events:none;}
+  .opt.wrong{background:var(--red); color:#fff; animation:shake .4s;}
+  .opt.lock{pointer-events:none; opacity:.6;}
+  .emoji-opts{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+  .emoji-opt{width:96px; height:96px; font-size:46px; border:3px solid var(--ink); border-radius:18px;
+    background:var(--card2); cursor:pointer; box-shadow:var(--shadow-sm); transition:transform .12s;
+    display:flex; align-items:center; justify-content:center;}
+  .emoji-opt:hover{transform:translateY(-3px) scale(1.04);}
+  .emoji-opt.correct{background:var(--green);}
+  .emoji-opt.wrong{background:var(--red); animation:shake .4s;}
+
+  /* true / false */
+  .tf-list{display:flex; flex-direction:column; gap:12px;}
+  .tf-row{border:3px solid var(--ink); border-radius:16px; padding:13px 15px; background:var(--card2);
+    box-shadow:var(--shadow-sm);}
+  .tf-row .tf-text{font-weight:700; font-size:15.5px; margin-bottom:10px;}
+  .tf-btns{display:flex; gap:10px;}
+  .tf-btn{flex:1; font-family:'Fredoka'; font-weight:600; font-size:15px; cursor:pointer;
+    border:3px solid var(--ink); border-radius:12px; padding:9px; background:var(--card);}
+  .tf-btn.t:hover{background:#e7f1da;}
+  .tf-btn.f:hover{background:#f6dfd7;}
+  .tf-btn.ok{background:var(--green); color:#fff; pointer-events:none;}
+  .tf-btn.no{background:var(--red); color:#fff; animation:shake .4s;}
+  .tf-row.solved{border-color:var(--green-dk);}
+
+  /* chips multi-select */
+  .chips{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin:6px 0 4px;}
+  .chip{font-family:'Fredoka'; font-weight:600; font-size:15px; cursor:pointer;
+    border:3px solid var(--ink); border-radius:30px; padding:9px 16px; background:var(--card2);
+    box-shadow:var(--shadow-sm); transition:transform .12s;}
+  .chip:hover{transform:translateY(-2px);}
+  .chip.picked{background:var(--gold);}
+  .chip.good{background:var(--green); color:#fff; pointer-events:none;}
+  .chip.bad{background:var(--red); color:#fff; animation:shake .4s;}
+
+  /* feedback + footer */
+  .feedback{min-height:26px; text-align:center; font-family:'Fredoka'; font-weight:600;
+    font-size:16px; margin:14px 0 4px;}
+  .feedback.ok{color:var(--green-dk);}
+  .feedback.no{color:var(--red-dk);}
+  .st-foot{display:flex; justify-content:space-between; align-items:center; margin-top:16px; gap:10px; flex-wrap:wrap;}
+  .progress-mini{font-weight:800; color:var(--ink-soft); font-size:14px;}
+
+  /* ---------- FINAL ---------- */
+  .final{background:var(--card); border:4px solid var(--ink); border-radius:30px;
+    box-shadow:var(--shadow); padding:32px 26px; text-align:center; position:relative; overflow:hidden;}
+  .chest{font-size:86px; animation:bob 2.4s ease-in-out infinite;}
+  .final h2{font-size:clamp(26px,5vw,38px); color:var(--red); margin:6px 0;}
+  .treasure-msg{background:var(--card2); border:3px solid var(--ink); border-radius:20px;
+    padding:18px 20px; margin:16px auto; max-width:620px; font-size:17px; font-weight:700;}
+  .values-row{display:flex; flex-wrap:wrap; gap:9px; justify-content:center; margin:14px 0;}
+  .vtag{background:var(--teal); color:#fff; border:3px solid var(--ink); border-radius:30px;
+    padding:7px 15px; font-family:'Fredoka'; font-weight:600; font-size:14px;}
+  .reflect{background:var(--card2); border:3px dashed var(--gold-dk); border-radius:20px;
+    padding:16px 20px; margin:16px auto; max-width:620px; text-align:left;}
+  .reflect h3{color:var(--teal-dk); font-size:17px; margin-bottom:8px;}
+  .reflect ul{padding-left:22px;}
+  .reflect li{font-weight:700; margin:5px 0; font-size:15.5px;}
+
+  /* ---------- MODAL ---------- */
+  .modal-bg{display:none; position:fixed; inset:0; background:rgba(46,33,24,.62);
+    z-index:50; padding:20px; overflow:auto;}
+  .modal-bg.show{display:flex; align-items:flex-start; justify-content:center;}
+  .modal{background:var(--card); border:4px solid var(--ink); border-radius:24px;
+    max-width:760px; width:100%; padding:26px 26px 30px; box-shadow:var(--shadow); margin:auto;}
+  .modal h2{color:var(--red); font-size:24px; margin-bottom:4px;}
+  .modal h3{color:var(--teal-dk); font-size:17px; margin:16px 0 6px;}
+  .modal p,.modal li{font-weight:700; font-size:15px; line-height:1.5;}
+  .modal ul{padding-left:22px;}
+  .modal li{margin:4px 0;}
+  .modal .x{float:right; cursor:pointer; border:3px solid var(--ink); background:var(--red);
+    color:#fff; width:38px; height:38px; border-radius:11px; font-size:20px; font-family:'Fredoka';}
+  .mt-tag{display:inline-block; background:var(--gold); border:2.5px solid var(--ink);
+    border-radius:8px; padding:2px 8px; font-family:'Fredoka'; font-weight:600; font-size:13px; margin:2px;}
+
+  /* confetti */
+  #confetti{position:fixed; inset:0; pointer-events:none; z-index:60;}
+  .conf{position:absolute; width:11px; height:14px; will-change:transform;}
+
+  @media(max-width:560px){
+    .match{grid-template-columns:1fr; gap:14px;}
+    .hero{padding:26px 18px;}
+    .station{padding:18px 15px 22px;}
+    .emoji-opt{width:80px; height:80px; font-size:38px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ TOP BAR ============ -->
+  <div class="topbar" id="topbar" style="display:none;">
+    <span class="crumbs" id="crumbs">Карта подорожі</span>
+    <div class="stars" title="Зібрані ключі-зірочки">
+      <span class="star" data-s="1">⭐</span>
+      <span class="star" data-s="2">⭐</span>
+      <span class="star" data-s="3">⭐</span>
+      <span class="star" data-s="4">⭐</span>
+      <span class="star" data-s="5">⭐</span>
+      <b id="starcount">0 / 5</b>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN: INTRO ============ -->
+  <section class="screen active" id="screen-intro">
+    <div class="hero">
+      <span class="ribbon">Я досліджую світ · 3 клас</span>
+      <div style="margin-top:10px;"><span class="owl">🦉</span></div>
+      <h1>Чого нас навчають свята</h1>
+      <p class="sub">Цифровий навчальний квест для роботи в групах і парах</p>
+      <div class="speech">
+        «Привіт! Я — Сова Мудра. Запрошую вас у подорож святами України.
+        На кожній зупинці на вас чекає завдання. Виконаєте всі п'ять — і відкриєте
+        чарівну скриню зі справжнім скарбом!»
+      </div>
+      <div class="info-grid">
+        <div class="chip-i"><b>Зупинок</b>5 + скриня скарбів</div>
+        <div class="chip-i"><b>Як грати</b>разом, у групі чи парі</div>
+        <div class="chip-i"><b>Час</b>≈ 15–20 хвилин</div>
+      </div>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:6px;">
+        <button class="btn" onclick="startQuest()">🚀 Почати квест</button>
+        <button class="btn ghost sm" onclick="openTeacher()">📋 Інструкція для вчителя</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN: MAP ============ -->
+  <section class="screen" id="screen-map">
+    <div class="map-head">
+      <h2>🗺️ Карта подорожі</h2>
+      <p id="map-hint">Натисни на зупинку, що світиться, — і вирушай!</p>
+    </div>
+    <div class="map" id="map">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+        <path d="M18,11 C40,17 58,18 70,27 C82,36 30,38 22,46 C13,55 80,55 68,64 C58,72 18,71 25,80 C30,86 42,90 50,94"
+              fill="none" stroke="#c9b48a" stroke-width="2.4" stroke-dasharray="4 3" stroke-linecap="round"/>
+      </svg>
+      <!-- nodes injected by JS -->
+    </div>
+    <div style="text-align:center; margin-top:14px;">
+      <button class="btn ghost sm" onclick="openTeacher()">📋 Інструкція для вчителя</button>
+    </div>
+  </section>
+
+  <!-- ============ STATION 1: ДЕРЖАВНІ СВЯТА ============ -->
+  <section class="screen" id="station-1">
+    <div class="station">
+      <div class="st-head">
+        <div class="st-badge">🇺🇦</div>
+        <div><div class="stp">Зупинка 1</div><h2>Свята нашої держави</h2></div>
+      </div>
+      <div class="group-tip"><span class="gi">💬</span>
+        <span>Працюйте разом: прочитайте картки вголос, обговоріть у групі, а потім один учень з'єднує пару.</span></div>
+      <p class="task-q">З'єднай свято з тим, що ми в цей день згадуємо та шануємо. Натисни картку зліва, потім — пару до неї справа.</p>
+      <div class="match" id="m1"></div>
+      <div class="feedback" id="fb1"></div>
+      <div class="st-foot">
+        <span class="progress-mini" id="p1">З'єднано пар: 0 / 4</span>
+        <button class="btn green" id="next1" disabled onclick="finishStation(1)">Далі ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATION 2: РОДИННІ СВЯТА ============ -->
+  <section class="screen" id="station-2">
+    <div class="station">
+      <div class="st-head">
+        <div class="st-badge">👨‍👩‍👧‍👦</div>
+        <div><div class="stp">Зупинка 2</div><h2>Свята нашої родини</h2></div>
+      </div>
+      <div class="group-tip"><span class="gi">💬</span>
+        <span>Обговоріть кожне запитання в групі та оберіть спільну відповідь.</span></div>
+      <div id="quizArea2"></div>
+      <div class="feedback" id="fb2"></div>
+      <div class="st-foot">
+        <span class="progress-mini" id="p2">Запитання 1 / 3</span>
+        <button class="btn green" id="next2" disabled onclick="finishStation(2)">Далі ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATION 3: НАРОДНІ СВЯТА ============ -->
+  <section class="screen" id="station-3">
+    <div class="station">
+      <div class="st-head">
+        <div class="st-badge">🎄</div>
+        <div><div class="stp">Зупинка 3</div><h2>Народні свята і традиції</h2></div>
+      </div>
+      <div class="group-tip"><span class="gi">💬</span>
+        <span>Згадайте разом: які символи й традиції має кожне свято. Оберіть правильну картинку.</span></div>
+      <div id="emojiArea3"></div>
+      <div class="feedback" id="fb3"></div>
+      <div class="st-foot">
+        <span class="progress-mini" id="p3">Свято 1 / 4</span>
+        <button class="btn green" id="next3" disabled onclick="finishStation(3)">Далі ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATION 4: ПРАВДА ЧИ НІ ============ -->
+  <section class="screen" id="station-4">
+    <div class="station">
+      <div class="st-head">
+        <div class="st-badge">🤔</div>
+        <div><div class="stp">Зупинка 4</div><h2>Правда чи неправда?</h2></div>
+      </div>
+      <div class="group-tip"><span class="gi">💬</span>
+        <span>Прочитайте речення, поміркуйте разом і позначте: це правда чи ні.</span></div>
+      <div class="tf-list" id="tf4"></div>
+      <div class="feedback" id="fb4"></div>
+      <div class="st-foot">
+        <span class="progress-mini" id="p4">Розгадано: 0 / 4</span>
+        <button class="btn green" id="next4" disabled onclick="finishStation(4)">Далі ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATION 5: СКРИНЯ СКАРБІВ ============ -->
+  <section class="screen" id="station-5">
+    <div class="station">
+      <div class="st-head">
+        <div class="st-badge">🗝️</div>
+        <div><div class="stp">Зупинка 5</div><h2>Чарівна скриня скарбів</h2></div>
+      </div>
+      <div class="group-tip"><span class="gi">💬</span>
+        <span>Це головне завдання квесту. Радьтеся всією групою!</span></div>
+      <p class="task-q">Скриня відкриється лише тоді, коли ви оберете <b>все, чого нас навчають свята</b>, і не торкнетесь зайвого. Натисніть потрібні картки, а потім — «Відкрити скриню».</p>
+      <div class="chips" id="chips5"></div>
+      <div class="feedback" id="fb5"></div>
+      <div class="st-foot">
+        <span class="progress-mini">Обирайте уважно 🔍</span>
+        <button class="btn gold" id="openChest" onclick="checkChest()">🗝️ Відкрити скриню</button>
+        <button class="btn green" id="next5" disabled onclick="finishStation(5)">Далі ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN: FINAL ============ -->
+  <section class="screen" id="screen-final">
+    <div class="final">
+      <div class="chest" id="chestIcon">🎁</div>
+      <div class="ribbon" style="background:var(--green);">Квест пройдено!</div>
+      <h2>Ви знайшли справжній скарб!</h2>
+      <div class="treasure-msg">
+        🦉 «Молодці! Скарб свят — це не золото. Свята вчать нас бути <b>добрими, вдячними
+        й уважними</b> одне до одного, поважати рідних і свою країну, берегти традиції
+        та робити приємне близьким. Це і є наш найцінніший скарб!»
+      </div>
+      <div class="values-row">
+        <span class="vtag">Повага</span><span class="vtag">Вдячність</span>
+        <span class="vtag">Доброта</span><span class="vtag">Турбота про рідних</span>
+        <span class="vtag">Єдність</span><span class="vtag">Любов до Батьківщини</span>
+        <span class="vtag">Збереження традицій</span>
+      </div>
+      <div class="reflect">
+        <h3>💬 Обговоріть у групі та поділіться з класом:</h3>
+        <ul>
+          <li>Яке свято найважливіше для вашої родини? Чому?</li>
+          <li>Чого вас навчило це свято?</li>
+          <li>Який добрий вчинок ви можете зробити на найближче свято?</li>
+        </ul>
+      </div>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <button class="btn teal" onclick="showMap()">🗺️ Повернутись на карту</button>
+        <button class="btn ghost" onclick="restart()">🔄 Пройти ще раз</button>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /wrap -->
+
+<!-- ============ TEACHER MODAL ============ -->
+<div class="modal-bg" id="teacherModal">
+  <div class="modal">
+    <button class="x" onclick="closeTeacher()">✕</button>
+    <h2>📋 Інструкція для вчителя</h2>
+    <p style="color:var(--ink-soft);">Цифровий навчальний квест «Чого нас навчають свята»</p>
+    <p style="margin-top:8px;">
+      <span class="mt-tag">Клас: 3</span>
+      <span class="mt-tag">Предмет: Я досліджую світ</span>
+      <span class="mt-tag">Форма роботи: групи / пари</span>
+      <span class="mt-tag">Тривалість: 15–20 хв</span>
+    </p>
+
+    <h3>🎯 Мета</h3>
+    <p>Узагальнити й систематизувати уявлення учнів про державні, родинні та народні
+       свята; підвести дітей до розуміння, що свята вчать поваги, вдячності, доброти,
+       єдності родини, любові до Батьківщини та збереження традицій.</p>
+
+    <h3>✅ Очікувані результати навчання</h3>
+    <ul>
+      <li>розрізняє державні, родинні та народні свята, наводить приклади;</li>
+      <li>пояснює, що саме згадують і шанують люди у певне свято;</li>
+      <li>називає традиції та символи відомих свят;</li>
+      <li>робить висновок, чого навчають свята, і пов'язує це з власним досвідом;</li>
+      <li>співпрацює в групі: домовляється, висловлює думку, слухає інших.</li>
+    </ul>
+
+    <h3>🧭 Як використати на уроці</h3>
+    <ul>
+      <li><b>Етап уроку:</b> закріплення / узагальнення матеріалу теми (також можливе
+        формувальне оцінювання наприкінці уроку).</li>
+      <li><b>Обладнання:</b> ноутбук + проєктор/інтерактивна дошка для спільної гри
+        АБО планшети/комп'ютери — по одному на групу. Файл відкривається у будь-якому
+        браузері, інтернет не обов'язковий.</li>
+      <li><b>Організація:</b> об'єднайте клас у групи по 3–4 учні (або пари). Кожна
+        зупинка починається з підказки «💬 Обговоріть у групі» — діти радяться, а потім
+        один учень виконує дію на екрані (роль «навігатора» варто чергувати).</li>
+      <li><b>Хід:</b> квест веде персонаж Сова Мудра. Учні проходять 5 зупинок по карті;
+        за кожну отримують ключ-зірочку. Зібравши всі 5, відкривають «скриню скарбів»
+        і виходять на підсумкову рефлексію.</li>
+      <li><b>Роль учителя:</b> спостерігає за роботою груп, за потреби ставить навідні
+        запитання, модерує фінальне обговорення.</li>
+    </ul>
+
+    <h3>📝 Оцінювання (формувальне)</h3>
+    <ul>
+      <li>спостереження за співпрацею та залученістю учнів у групах;</li>
+      <li>правильність виконання завдань зупинок (видно одразу за зворотним зв'язком);</li>
+      <li>якість відповідей під час фінального обговорення з класом;</li>
+      <li>самооцінювання групи: «Що вдалося? Що було складно? Чого навчилися?».</li>
+    </ul>
+
+    <h3>💡 Порада</h3>
+    <p>Завдання можна виконувати повторно — натисніть «Пройти ще раз». Зупинку зі
+       скринею скарбів (№5) добре винести в спільне обговорення всім класом.</p>
+
+    <div style="text-align:center; margin-top:18px;">
+      <button class="btn teal sm" onclick="closeTeacher()">Зрозуміло, закрити</button>
+    </div>
+  </div>
+</div>
+
+<div id="confetti"></div>
+
+<script>
+/* ================= STATE ================= */
+const done = {1:false,2:false,3:false,4:false,5:false};
+let chestUnlocked = false;
+
+/* ================= NAVIGATION ================= */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function startQuest(){
+  document.getElementById('topbar').style.display='flex';
+  buildAll();
+  showMap();
+}
+function showMap(){
+  show('screen-map');
+  document.getElementById('crumbs').textContent='🗺️ Карта подорожі';
+  renderMap();
+}
+function openStation(n){
+  if(n>1 && !done[n-1]) return;
+  show('station-'+n);
+  document.getElementById('crumbs').textContent='Зупинка '+n;
+}
+function finishStation(n){
+  done[n]=true;
+  setStar(n);
+  burst(26);
+  if(Object.values(done).every(v=>v)){ show('screen-final'); launchFinal(); }
+  else showMap();
+}
+function restart(){
+  for(let k in done) done[k]=false;
+  chestUnlocked=false;
+  document.querySelectorAll('.star').forEach(s=>s.classList.remove('on'));
+  document.getElementById('starcount').textContent='0 / 5';
+  buildAll();
+  showMap();
+}
+function setStar(n){
+  document.querySelector('.star[data-s="'+n+'"]').classList.add('on');
+  const c=Object.values(done).filter(Boolean).length;
+  document.getElementById('starcount').textContent=c+' / 5';
+}
+
+/* ================= MAP ================= */
+const NODES=[
+  {n:1,x:18,y:11,icon:'🇺🇦',lbl:'Державні свята'},
+  {n:2,x:70,y:27,icon:'👨‍👩‍👧‍👦',lbl:'Родинні свята'},
+  {n:3,x:22,y:46,icon:'🎄',lbl:'Народні свята'},
+  {n:4,x:68,y:64,icon:'🤔',lbl:'Правда чи ні'},
+  {n:5,x:25,y:80,icon:'🗝️',lbl:'Скриня скарбів'},
+  {n:'F',x:50,y:94,icon:'🏆',lbl:'Скарб'}
+];
+function renderMap(){
+  const map=document.getElementById('map');
+  map.querySelectorAll('.node').forEach(e=>e.remove());
+  NODES.forEach(nd=>{
+    const el=document.createElement('div');
+    el.className='node';
+    el.style.left=nd.x+'%'; el.style.top=nd.y+'%';
+    let state='locked';
+    if(nd.n==='F'){
+      state = Object.values(done).every(v=>v)?'open':'locked';
+    } else {
+      if(done[nd.n]) state='done';
+      else if(nd.n===1 || done[nd.n-1]) state='open';
+    }
+    el.dataset.state=state;
+    const num = nd.n==='F' ? '★' : nd.n;
+    el.innerHTML='<div class="num">'+num+'</div>'+
+      '<div class="dot">'+(state==='done'?'✓':nd.icon)+'</div>'+
+      '<div class="lbl">'+nd.lbl+'</div>';
+    if(state!=='locked'){
+      el.onclick=()=>{
+        if(nd.n==='F'){ show('screen-final'); launchFinal(); }
+        else openStation(nd.n);
+      };
+    }
+    map.appendChild(el);
+  });
+}
+
+/* ================= DATA ================= */
+const ST1=[
+  {a:'День Незалежності України', b:'День, коли Україна стала вільною державою'},
+  {a:'День Конституції України',  b:'Свято головного закону нашої країни'},
+  {a:'День захисників і захисниць',b:'Подяка людям, які боронять Україну'},
+  {a:'День Державного Прапора',   b:'Свято синьо-жовтого прапора України'}
+];
+const ST2=[
+  {q:'Яке свято допомагає подякувати мамі за любов і турботу?',
+   o:['День сміху','День матері','День знань'],c:1},
+  {q:'Що найважливіше в родинному святі?',
+   o:['Бути разом усією родиною','Дуже дорогі подарунки','Гучна музика'],c:0},
+  {q:'Бабуся святкує день народження, а ви далеко. Як її привітати?',
+   o:['Нічого не робити','Забути про свято','Зателефонувати і сказати теплі слова'],c:2}
+];
+const ST3=[
+  {h:'Різдво',correct:'🌾',o:['🌾','🏖️','🎈'],hint:'кутя та колядки'},
+  {h:'Великдень',correct:'🥚',o:['⚽','🥚','❄️'],hint:'писанки та паска'},
+  {h:'День святого Миколая',correct:'🎁',o:['🎁','🍉','🌧️'],hint:'подарунок під подушкою'},
+  {h:'Новий рік',correct:'🎄',o:['🌻','🎄','🐚'],hint:'прикрашена ялинка'}
+];
+const ST4=[
+  {t:'Свята допомагають нам пам\u2019ятати важливі події.',ans:true},
+  {t:'На свято варто привітати рідних і друзів.',ans:true},
+  {t:'Готувати святкову гостину разом із родиною — нудно й непотрібно.',ans:false},
+  {t:'Кожен народ має свої святкові традиції.',ans:true}
+];
+const ST5={
+  good:['Повага','Вдячність','Доброта','Турбота про рідних','Єдність','Любов до Батьківщини'],
+  bad:['Заздрість','Жадібність','Лінощі','Грубість']
+};
+
+/* ================= BUILD ================= */
+function buildAll(){ build1(); build2(); build3(); build4(); build5(); }
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* ---- Station 1: matching ---- */
+function build1(){
+  const wrap=document.getElementById('m1');
+  wrap.innerHTML='';
+  const left=document.createElement('div'); left.className='mcol';
+  const right=document.createElement('div'); right.className='mcol';
+  left.innerHTML='<h4>СВЯТО</h4>';
+  right.innerHTML='<h4>ЩО МИ ШАНУЄМО</h4>';
+  ST1.forEach((p,i)=>{
+    const l=document.createElement('div'); l.className='mcard'; l.textContent=p.a;
+    l.dataset.id=i; l.dataset.side='L'; left.appendChild(l);
+  });
+  shuffle(ST1.map((p,i)=>({...p,i}))).forEach(p=>{
+    const r=document.createElement('div'); r.className='mcard'; r.textContent=p.b;
+    r.dataset.id=p.i; r.dataset.side='R'; right.appendChild(r);
+  });
+  wrap.appendChild(left); wrap.appendChild(right);
+  document.getElementById('p1').textContent='З\u2019єднано пар: 0 / '+ST1.length;
+  document.getElementById('next1').disabled=true;
+  document.getElementById('fb1').textContent='';
+  let selL=null,selR=null,matched=0;
+  wrap.querySelectorAll('.mcard').forEach(c=>{
+    c.onclick=()=>{
+      if(c.classList.contains('matched'))return;
+      if(c.dataset.side==='L'){ if(selL)selL.classList.remove('sel'); selL=c; }
+      else { if(selR)selR.classList.remove('sel'); selR=c; }
+      c.classList.add('sel');
+      if(selL&&selR){
+        const a=selL,b=selR;
+        if(a.dataset.id===b.dataset.id){
+          a.classList.remove('sel');b.classList.remove('sel');
+          a.classList.add('matched');b.classList.add('matched');
+          matched++;
+          document.getElementById('p1').textContent='З\u2019єднано пар: '+matched+' / '+ST1.length;
+          setFb('fb1','Правильно! 🎉','ok');
+          if(matched===ST1.length){ setFb('fb1','Чудово! Усі свята з\u2019єднано! 🌟','ok');
+            document.getElementById('next1').disabled=false; burst(14);}
+        } else {
+          a.classList.add('shake');b.classList.add('shake');
+          setFb('fb1','Ще ні. Поміркуйте разом і спробуйте іншу пару.','no');
+          setTimeout(()=>{a.classList.remove('sel','shake');b.classList.remove('sel','shake');},420);
+        }
+        selL=null;selR=null;
+      }
+    };
+  });
+}
+
+/* ---- Station 2: quiz ---- */
+let q2=0;
+function build2(){
+  q2=0;
+  document.getElementById('next2').disabled=true;
+  document.getElementById('fb2').textContent='';
+  renderQ2();
+}
+function renderQ2(){
+  const area=document.getElementById('quizArea2');
+  const item=ST2[q2];
+  document.getElementById('p2').textContent='Запитання '+(q2+1)+' / '+ST2.length;
+  area.innerHTML='<p class="task-q">'+(q2+1)+'. '+item.q+'</p>';
+  const opts=document.createElement('div'); opts.className='opts';
+  shuffle(item.o.map((t,i)=>({t,i}))).forEach(o=>{
+    const b=document.createElement('div'); b.className='opt'; b.textContent=o.t;
+    b.onclick=()=>{
+      if(o.i===item.c){
+        b.classList.add('correct');
+        opts.querySelectorAll('.opt').forEach(x=>x.classList.add('lock'));
+        setFb('fb2','Правильно! 👍','ok');
+        setTimeout(()=>{
+          q2++;
+          if(q2<ST2.length){ document.getElementById('fb2').textContent=''; renderQ2(); }
+          else { setFb('fb2','Усі відповіді знайдено! Молодці! 🌟','ok');
+            document.getElementById('next2').disabled=false; burst(14);}
+        },850);
+      } else {
+        b.classList.add('wrong');
+        setFb('fb2','Не зовсім. Обговоріть ще раз і спробуйте.','no');
+        setTimeout(()=>b.classList.remove('wrong'),420);
+      }
+    };
+    opts.appendChild(b);
+  });
+  area.appendChild(opts);
+}
+
+/* ---- Station 3: emoji pick ---- */
+let q3=0;
+function build3(){
+  q3=0;
+  document.getElementById('next3').disabled=true;
+  document.getElementById('fb3').textContent='';
+  renderQ3();
+}
+function renderQ3(){
+  const area=document.getElementById('emojiArea3');
+  const item=ST3[q3];
+  document.getElementById('p3').textContent='Свято '+(q3+1)+' / '+ST3.length;
+  area.innerHTML='<p class="task-q">'+(q3+1)+'. Який символ і традиція належать святу «'+item.h+'»?</p>';
+  const row=document.createElement('div'); row.className='emoji-opts';
+  shuffle(item.o).forEach(em=>{
+    const b=document.createElement('button'); b.className='emoji-opt'; b.textContent=em;
+    b.onclick=()=>{
+      if(em===item.correct){
+        b.classList.add('correct');
+        row.querySelectorAll('.emoji-opt').forEach(x=>x.disabled=true);
+        setFb('fb3','Так! «'+item.h+'» — це '+item.hint+'. ✅','ok');
+        setTimeout(()=>{
+          q3++;
+          if(q3<ST3.length){ document.getElementById('fb3').textContent=''; renderQ3(); }
+          else { setFb('fb3','Ви знаєте всі народні свята! 🌟','ok');
+            document.getElementById('next3').disabled=false; burst(14);}
+        },950);
+      } else {
+        b.classList.add('wrong');
+        setFb('fb3','Спробуйте інший символ. Підказка: '+item.hint+'.','no');
+        setTimeout(()=>b.classList.remove('wrong'),420);
+      }
+    };
+    row.appendChild(b);
+  });
+  area.appendChild(row);
+}
+
+/* ---- Station 4: true / false ---- */
+function build4(){
+  const box=document.getElementById('tf4');
+  box.innerHTML='';
+  document.getElementById('next4').disabled=true;
+  document.getElementById('fb4').textContent='';
+  let solved=0;
+  ST4.forEach((item,i)=>{
+    const row=document.createElement('div'); row.className='tf-row';
+    row.innerHTML='<div class="tf-text">'+(i+1)+'. '+item.t+'</div>';
+    const btns=document.createElement('div'); btns.className='tf-btns';
+    const bt=document.createElement('button'); bt.className='tf-btn t'; bt.textContent='✅ Правда';
+    const bf=document.createElement('button'); bf.className='tf-btn f'; bf.textContent='❌ Неправда';
+    function pick(val,btn,other){
+      if(val===item.ans){
+        btn.classList.add('ok'); other.disabled=true; row.classList.add('solved');
+        solved++;
+        document.getElementById('p4').textContent='Розгадано: '+solved+' / '+ST4.length;
+        setFb('fb4','Правильно! 👍','ok');
+        if(solved===ST4.length){ setFb('fb4','Усі речення розгадано! 🌟','ok');
+          document.getElementById('next4').disabled=false; burst(14);}
+      } else {
+        btn.classList.add('no');
+        setFb('fb4','Поміркуйте ще раз усією групою.','no');
+        setTimeout(()=>btn.classList.remove('no'),420);
+      }
+    }
+    bt.onclick=()=>pick(true,bt,bf);
+    bf.onclick=()=>pick(false,bf,bt);
+    btns.appendChild(bt); btns.appendChild(bf);
+    row.appendChild(btns); box.appendChild(row);
+  });
+}
+
+/* ---- Station 5: chest ---- */
+function build5(){
+  const box=document.getElementById('chips5');
+  box.innerHTML='';
+  chestUnlocked=false;
+  document.getElementById('next5').disabled=true;
+  document.getElementById('openChest').style.display='';
+  document.getElementById('fb5').textContent='';
+  shuffle([...ST5.good.map(t=>({t,good:true})),...ST5.bad.map(t=>({t,good:false}))])
+  .forEach(item=>{
+    const c=document.createElement('div'); c.className='chip'; c.textContent=item.t;
+    c.dataset.good=item.good;
+    c.onclick=()=>{ if(chestUnlocked)return; c.classList.toggle('picked'); };
+    box.appendChild(c);
+  });
+}
+function checkChest(){
+  if(chestUnlocked)return;
+  const chips=[...document.querySelectorAll('#chips5 .chip')];
+  const missGood = chips.some(c=>c.dataset.good==='true' && !c.classList.contains('picked'));
+  const tookBad  = chips.some(c=>c.dataset.good==='false'&& c.classList.contains('picked'));
+  if(missGood || tookBad){
+    setFb('fb5','Скриня поки не відкривається. Придивіться: щось зайве або чогось бракує. 🔍','no');
+    chips.filter(c=>c.dataset.good==='false'&&c.classList.contains('picked'))
+         .forEach(c=>{c.classList.add('bad');setTimeout(()=>c.classList.remove('bad','picked'),600);});
+    return;
+  }
+  chestUnlocked=true;
+  chips.forEach(c=>{ if(c.dataset.good==='true') c.classList.add('good'); c.style.pointerEvents='none'; });
+  setFb('fb5','🗝️ Клац! Скриня відкрилась! Ви знайшли всі скарби свят! 🌟','ok');
+  document.getElementById('openChest').style.display='none';
+  document.getElementById('next5').disabled=false;
+  burst(24);
+}
+
+/* ================= HELPERS ================= */
+function setFb(id,txt,type){
+  const el=document.getElementById(id);
+  el.textContent=txt;
+  el.className='feedback '+(type||'');
+}
+
+/* ================= TEACHER MODAL ================= */
+function openTeacher(){document.getElementById('teacherModal').classList.add('show');}
+function closeTeacher(){document.getElementById('teacherModal').classList.remove('show');}
+document.getElementById('teacherModal').addEventListener('click',e=>{
+  if(e.target.id==='teacherModal') closeTeacher();
+});
+
+/* ================= FINAL ================= */
+function launchFinal(){
+  document.getElementById('crumbs').textContent='🏆 Скарб знайдено';
+  const chest=document.getElementById('chestIcon');
+  chest.textContent='🎁';
+  setTimeout(()=>chest.textContent='🏆',500);
+  burst(60);
+}
+
+/* ================= CONFETTI ================= */
+function burst(count){
+  const box=document.getElementById('confetti');
+  const colors=['#d24a2c','#e6a728','#1f7a6b','#5f9a3c','#fffaef'];
+  for(let i=0;i<count;i++){
+    const c=document.createElement('div');
+    c.className='conf';
+    c.style.background=colors[i%colors.length];
+    c.style.left=Math.random()*100+'vw';
+    c.style.top='-20px';
+    c.style.borderRadius=Math.random()<.5?'50%':'2px';
+    box.appendChild(c);
+    const dur=1600+Math.random()*1400;
+    const xMove=(Math.random()-.5)*260;
+    const rot=Math.random()*720;
+    c.animate([
+      {transform:'translate(0,0) rotate(0deg)',opacity:1},
+      {transform:'translate('+xMove+'px,'+(window.innerHeight+60)+'px) rotate('+rot+'deg)',opacity:1}
+    ],{duration:dur,easing:'cubic-bezier(.3,.6,.5,1)'});
+    setTimeout(()=>c.remove(),dur);
+  }
+}
+</script>
+</body>
+</html>
