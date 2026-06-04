@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>МАТЕ-БОТИ · Шлях до Мегаскриньки · 3 клас</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Fredoka:wght@500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#1b1140; --bg2:#3a1764; --panel:#241a4d;
+    --ink:#23104a; --paper:#fdfbff;
+    --lime:#9bff3c; --lime-dk:#5fb800;
+    --cyan:#33e1ff; --cyan-dk:#0fa6c4;
+    --magenta:#ff4fa8; --magenta-dk:#c41f72;
+    --gold:#ffd23c; --gold-dk:#d49f00;
+    --red:#ff4d4d; --red-dk:#c41616;
+    --stroke:#160a35;
+    --shadow:0 6px 0 var(--stroke), 0 14px 30px rgba(0,0,0,.45);
+    --shadow-sm:0 4px 0 var(--stroke);
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    font-family:'Nunito','Trebuchet MS',sans-serif; color:var(--paper); min-height:100%;
+    background:
+      radial-gradient(circle at 15% 12%, rgba(51,225,255,.22), transparent 42%),
+      radial-gradient(circle at 85% 18%, rgba(255,79,168,.25), transparent 45%),
+      radial-gradient(circle at 50% 100%, rgba(155,255,60,.16), transparent 50%),
+      linear-gradient(160deg, var(--bg1), var(--bg2));
+    background-attachment:fixed; overflow-x:hidden;
+  }
+  body::before{content:""; position:fixed; inset:0; pointer-events:none; opacity:.5;
+    background-image:radial-gradient(rgba(255,255,255,.07) 1.5px, transparent 1.5px);
+    background-size:26px 26px;}
+  .wrap{max-width:880px; margin:0 auto; padding:16px 14px 60px; position:relative;}
+  h1,h2,h3,.disp{font-family:'Luckiest Guy','Trebuchet MS',cursive; font-weight:400; letter-spacing:.5px; line-height:1.05;}
+
+  /* ---- HUD ---- */
+  .hud{display:none; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; flex-wrap:wrap;}
+  .lvlbar{display:flex; gap:6px;}
+  .pip{width:30px; height:12px; border-radius:6px; background:rgba(255,255,255,.18);
+    border:2px solid var(--stroke);}
+  .pip.on{background:var(--lime); box-shadow:0 0 10px var(--lime);}
+  .gems{display:flex; align-items:center; gap:7px; background:var(--panel);
+    border:3px solid var(--stroke); border-radius:30px; padding:5px 14px; box-shadow:var(--shadow-sm);}
+  .gems .ic{font-size:18px;} .gems b{font-family:'Luckiest Guy'; color:var(--cyan); font-size:18px;}
+
+  /* ---- BUTTONS ---- */
+  .btn{font-family:'Luckiest Guy'; font-size:20px; cursor:pointer; color:#fff; letter-spacing:.6px;
+    border:4px solid var(--stroke); border-radius:18px; padding:14px 28px; background:var(--lime);
+    color:var(--ink); box-shadow:var(--shadow-sm); transition:transform .12s, box-shadow .12s; text-transform:uppercase;}
+  .btn:hover{transform:translateY(-3px); box-shadow:0 7px 0 var(--stroke);}
+  .btn:active{transform:translateY(3px); box-shadow:0 1px 0 var(--stroke);}
+  .btn.cyan{background:var(--cyan); color:var(--ink);}
+  .btn.magenta{background:var(--magenta);}
+  .btn.gold{background:var(--gold); color:var(--ink);}
+  .btn.ghost{background:var(--panel); color:#fff; font-size:15px; padding:9px 16px; border-radius:13px;}
+  .btn.sm{font-size:15px; padding:9px 16px; border-radius:13px;}
+  .btn:disabled{opacity:.4; cursor:not-allowed; transform:none;}
+
+  /* ---- SCREENS ---- */
+  .screen{display:none; animation:pop-in .4s ease both;}
+  .screen.active{display:block;}
+  @keyframes pop-in{from{opacity:0; transform:scale(.96);}to{opacity:1; transform:scale(1);}}
+
+  /* ---- TITLE ---- */
+  .title-card{background:linear-gradient(160deg,#2a1a5e,#46208a); border:5px solid var(--stroke);
+    border-radius:30px; box-shadow:var(--shadow); padding:26px 22px 30px; text-align:center; position:relative; overflow:hidden;}
+  .burst{position:absolute; inset:0; pointer-events:none;
+    background:repeating-conic-gradient(from 0deg at 50% 38%, rgba(255,255,255,.06) 0deg 9deg, transparent 9deg 18deg);
+    opacity:.6;}
+  .logo{display:inline-block; background:var(--gold); color:var(--ink);
+    border:5px solid var(--stroke); border-radius:20px; padding:10px 22px 6px; transform:rotate(-3deg);
+    box-shadow:6px 8px 0 rgba(0,0,0,.4); position:relative;}
+  .logo h1{font-size:clamp(34px,9vw,62px);}
+  .logo .small{font-family:'Luckiest Guy'; font-size:clamp(15px,3.6vw,22px); color:var(--magenta-dk);}
+  .subtitle{font-family:'Luckiest Guy'; color:var(--cyan); font-size:clamp(18px,4.5vw,26px); margin:18px 0 6px;}
+  .heroes{display:flex; gap:8px; justify-content:center; align-items:flex-end; margin:8px 0;}
+  .heroes svg{width:clamp(90px,26vw,140px); height:auto; filter:drop-shadow(0 6px 0 rgba(0,0,0,.35));}
+  .brief{background:rgba(0,0,0,.28); border:3px dashed var(--cyan); border-radius:18px;
+    padding:14px 18px; margin:14px auto; max-width:560px; font-weight:800; font-size:16px;}
+  .brief b{color:var(--lime);}
+
+  /* ---- MOOD METER ---- */
+  .mood-head{text-align:center; margin-bottom:10px;}
+  .mood-head h2{font-size:clamp(26px,6vw,40px); color:var(--lime);}
+  .mood-head p{font-weight:800; color:#d9cffb;}
+  .mood-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+  .mood{background:var(--panel); border:4px solid var(--stroke); border-radius:18px; padding:8px 4px 6px;
+    cursor:pointer; text-align:center; box-shadow:var(--shadow-sm); transition:transform .14s;}
+  .mood:hover{transform:translateY(-4px);}
+  .mood.sel{outline:4px solid var(--gold); transform:translateY(-4px) scale(1.03);}
+  .mood svg{width:64px; height:64px;}
+  .mood .nm{font-family:'Luckiest Guy'; font-size:13px; color:#fff; margin-top:2px;}
+
+  /* ---- COMIC PANEL ---- */
+  .level-head{display:flex; align-items:center; gap:10px; margin-bottom:12px;}
+  .lv-badge{font-family:'Luckiest Guy'; font-size:18px; background:var(--magenta); color:#fff;
+    border:4px solid var(--stroke); border-radius:14px; padding:6px 14px; box-shadow:var(--shadow-sm);}
+  .lv-title{font-family:'Luckiest Guy'; font-size:clamp(18px,4.5vw,26px); color:var(--gold);}
+  .panel{background:linear-gradient(150deg,#2d2160,#221649); border:5px solid var(--stroke);
+    border-radius:24px; box-shadow:var(--shadow); padding:18px; position:relative; overflow:hidden;}
+  .scene{display:flex; gap:14px; align-items:flex-end; min-height:140px; padding:6px 4px 0;
+    background:radial-gradient(ellipse at 50% 120%, rgba(51,225,255,.18), transparent 60%);
+    border-radius:16px;}
+  .scene .actor{flex:none;}
+  .scene .actor svg{width:clamp(86px,24vw,128px); height:auto; filter:drop-shadow(0 6px 0 rgba(0,0,0,.4));}
+  .bubble{position:relative; background:var(--paper); color:var(--ink); border:4px solid var(--stroke);
+    border-radius:18px; padding:14px 16px; font-weight:800; font-size:17px; flex:1; box-shadow:var(--shadow-sm);
+    align-self:center; animation:pop-in .3s ease both;}
+  .bubble .who{font-family:'Luckiest Guy'; font-size:13px; display:block; margin-bottom:3px;}
+  .bubble.left::after{content:""; position:absolute; left:-16px; top:30px; border:9px solid transparent;
+    border-right-color:var(--stroke);}
+  .bubble.right::after{content:""; position:absolute; right:-16px; top:30px; border:9px solid transparent;
+    border-left-color:var(--stroke);}
+  .who.hero{color:var(--lime-dk);} .who.heroine{color:var(--magenta-dk);} .who.villain{color:var(--red-dk);}
+  .panel-foot{text-align:center; margin-top:14px;}
+
+  /* ---- TASK ---- */
+  .task{background:rgba(0,0,0,.25); border:4px solid var(--cyan); border-radius:18px;
+    padding:16px; margin-top:14px; animation:pop-in .35s ease both;}
+  .task .qtag{font-family:'Luckiest Guy'; color:var(--cyan); font-size:14px;}
+  .task .q{font-family:'Luckiest Guy'; font-size:clamp(20px,5vw,30px); text-align:center; margin:8px 0 4px;}
+  .task .hintbox{background:rgba(255,210,60,.14); border:2px dashed var(--gold); border-radius:12px;
+    padding:8px 12px; font-weight:800; font-size:14px; margin:6px 0 12px; text-align:center; color:#ffe9a3;}
+  .answers{display:grid; grid-template-columns:repeat(2,1fr); gap:10px;}
+  .ans{font-family:'Luckiest Guy'; font-size:24px; cursor:pointer; color:#fff;
+    border:4px solid var(--stroke); border-radius:16px; padding:14px; background:var(--panel);
+    box-shadow:var(--shadow-sm); transition:transform .12s;}
+  .ans:hover{transform:translateY(-3px);}
+  .ans.correct{background:var(--lime); color:var(--ink); animation:pop .4s;}
+  .ans.wrong{background:var(--red); animation:shake .4s;}
+  .ans.lock{pointer-events:none; opacity:.55;}
+  @keyframes pop{0%{transform:scale(1);}50%{transform:scale(1.12);}100%{transform:scale(1);}}
+  @keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-7px);}40%,80%{transform:translateX(7px);}}
+  .fb{min-height:24px; text-align:center; font-family:'Luckiest Guy'; font-size:17px; margin-top:12px;}
+  .fb.ok{color:var(--lime);} .fb.no{color:var(--red);}
+  .progress-q{text-align:center; font-weight:900; color:#c9bdf5; font-size:13px; margin-top:6px;}
+
+  /* diagram */
+  .chart{background:var(--paper); border:4px solid var(--stroke); border-radius:16px; padding:14px 12px 6px; margin:10px 0;}
+  .chart svg{width:100%; height:auto; display:block;}
+
+  /* ---- FINAL ---- */
+  .final{background:linear-gradient(160deg,#2a1a5e,#46208a); border:5px solid var(--stroke);
+    border-radius:30px; box-shadow:var(--shadow); padding:30px 22px; text-align:center; position:relative; overflow:hidden;}
+  .chest{font-size:90px; animation:bob 2.2s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-12px) rotate(3deg);}}
+  .final h2{font-size:clamp(26px,6vw,42px); color:var(--gold); margin:6px 0;}
+  .prize{background:rgba(0,0,0,.28); border:3px solid var(--cyan); border-radius:20px; padding:16px 20px;
+    margin:16px auto; max-width:600px; font-weight:800; font-size:17px;}
+  .reflect{background:rgba(0,0,0,.25); border:3px dashed var(--lime); border-radius:18px; padding:16px;
+    margin:16px auto; max-width:600px; text-align:left;}
+  .reflect h3{color:var(--lime); font-size:18px; margin-bottom:8px;}
+  .reflect li{font-weight:800; margin:5px 0; font-size:15.5px;}
+
+  /* ---- MODAL ---- */
+  .modal-bg{display:none; position:fixed; inset:0; background:rgba(10,5,30,.72); z-index:50; padding:20px; overflow:auto;}
+  .modal-bg.show{display:flex; align-items:flex-start; justify-content:center;}
+  .modal{background:#fdfbff; color:var(--ink); border:5px solid var(--stroke); border-radius:24px;
+    max-width:760px; width:100%; padding:24px; box-shadow:var(--shadow); margin:auto;}
+  .modal h2{color:var(--magenta-dk); font-size:24px;}
+  .modal h3{color:var(--cyan-dk); font-size:17px; margin:14px 0 5px;}
+  .modal p,.modal li{font-weight:800; font-size:15px; line-height:1.5;}
+  .modal ul{padding-left:22px;} .modal li{margin:4px 0;}
+  .modal .x{float:right; cursor:pointer; border:4px solid var(--stroke); background:var(--red); color:#fff;
+    width:40px; height:40px; border-radius:12px; font-size:20px; font-family:'Luckiest Guy';}
+  .mt-tag{display:inline-block; background:var(--gold); border:3px solid var(--stroke); border-radius:9px;
+    padding:2px 9px; font-family:'Luckiest Guy'; font-size:13px; margin:2px;}
+
+  #confetti{position:fixed; inset:0; pointer-events:none; z-index:60;}
+  .conf{position:absolute; width:12px; height:15px;}
+
+  @media(max-width:560px){
+    .answers{grid-template-columns:1fr 1fr;}
+    .mood-grid{grid-template-columns:repeat(2,1fr);}
+    .scene{flex-direction:column; align-items:center;}
+    .bubble.left::after,.bubble.right::after{display:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== HUD ===== -->
+  <div class="hud" id="hud">
+    <div class="lvlbar" id="lvlbar"></div>
+    <div class="gems"><span class="ic">💎</span><b id="gemCount">0</b></div>
+  </div>
+
+  <!-- ===== TITLE ===== -->
+  <section class="screen active" id="s-title">
+    <div class="title-card">
+      <div class="burst"></div>
+      <div class="logo"><h1>MATE-БОТИ</h1><div class="small">МАТЕМАТИЧНА БИТВА</div></div>
+      <div class="subtitle">⭐ Шлях до Мегаскриньки ⭐</div>
+      <div class="heroes" id="titleHeroes"></div>
+      <div class="brief">
+        Пройди <b>5 рівнів</b>, перемагай хитрого боса <b>Глюка</b>, розв'язуй приклади,
+        рівняння й задачі — і забери свій супер-приз із Мегаскриньки!<br>
+        🎒 Готуй зошит, ручку та свою суперлогіку!
+      </div>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; position:relative;">
+        <button class="btn" onclick="startGame()">▶ Натисни, щоб почати!</button>
+        <button class="btn ghost" onclick="openTeacher()">📋 Для вчителя</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MOOD METER ===== -->
+  <section class="screen" id="s-mood">
+    <div class="panel">
+      <div class="mood-head">
+        <h2>🤖 Який ти робот сьогодні?</h2>
+        <p>Обери настрій, з яким вирушаєш у битву (це лише для розминки!)</p>
+      </div>
+      <div class="mood-grid" id="moodGrid"></div>
+      <div class="panel-foot"><button class="btn cyan" id="moodNext" disabled onclick="goLevel(0)">У бій! ▶</button></div>
+    </div>
+  </section>
+
+  <!-- ===== LEVELS (rendered into here) ===== -->
+  <section class="screen" id="s-level">
+    <div class="level-head">
+      <span class="lv-badge" id="lvBadge">РІВЕНЬ 1</span>
+      <span class="lv-title" id="lvTitle"></span>
+    </div>
+    <div class="panel">
+      <div class="scene" id="scene"></div>
+      <div class="panel-foot" id="sceneFoot"></div>
+      <div id="taskHost"></div>
+    </div>
+  </section>
+
+  <!-- ===== FINAL ===== -->
+  <section class="screen" id="s-final">
+    <div class="final">
+      <div class="burst"></div>
+      <div class="chest" id="chestIcon">🎁</div>
+      <div class="subtitle">ПЕРЕМОГА!</div>
+      <h2>Мегаскринька твоя! 🏆</h2>
+      <div class="prize">
+        🤖 «Ти впорався, юний МАТЕ-Бот! Ти навчився <b>множити числа виду 15·3</b>,
+        <b>розв'язувати рівняння й задачі</b> та <b>читати діаграму</b>. Глюк переможений,
+        а ти отримуєш найбільший приз — <b>суперлогіку</b> й супер-кристал! 💎»
+      </div>
+      <div style="font-size:30px; margin:6px 0;">💎💎💎 <b id="finalGems" style="font-family:'Luckiest Guy';color:var(--cyan);">0</b> кристалів 💎💎💎</div>
+      <div class="reflect">
+        <h3>💬 Поміркуй і розкажи в класі / групі:</h3>
+        <ul>
+          <li>Як ти швидко множиш число виду 15·3? Поясни «крок за кроком».</li>
+          <li>Що означає розв'язати рівняння — знайти що?</li>
+          <li>Чим діаграма зручніша за просто перелік чисел?</li>
+        </ul>
+      </div>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <button class="btn magenta" onclick="restart()">🔄 Пройти ще раз</button>
+        <button class="btn ghost" onclick="openTeacher()">📋 Для вчителя</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ===== TEACHER MODAL ===== -->
+<div class="modal-bg" id="teacherModal">
+  <div class="modal">
+    <button class="x" onclick="closeTeacher()">✕</button>
+    <h2>📋 Інструкція для вчителя</h2>
+    <p style="color:#6a4fa0;">Інтерактивний комікс-гра «МАТЕ-БОТИ. Шлях до Мегаскриньки»</p>
+    <p style="margin-top:8px;">
+      <span class="mt-tag">Клас: 3</span><span class="mt-tag">Предмет: Математика</span>
+      <span class="mt-tag">Форма: фронтально / у групах</span><span class="mt-tag">≈ 15–20 хв</span>
+    </p>
+    <h3>🎯 Тема</h3>
+    <p>Множення чисел виду 15·3. Розв'язування рівнянь і задач. Робота з діаграмою.</p>
+    <h3>🎯 Мета</h3>
+    <p>Закріпити прийом множення двоцифрового числа на одноцифрове виду 15·3; вправляти
+       в розв'язуванні рівнянь та простих задач; формувати вміння читати й аналізувати
+       стовпчасту діаграму.</p>
+    <h3>✅ Очікувані результати</h3>
+    <ul>
+      <li>множить числа виду 15·3, пояснює прийом (розклад на розрядні доданки);</li>
+      <li>розв'язує рівняння на множення/ділення, знаходить невідомий компонент;</li>
+      <li>розв'язує прості задачі на множення;</li>
+      <li>читає стовпчасту діаграму, порівнює та обчислює дані;</li>
+      <li>співпрацює, обґрунтовує свій вибір.</li>
+    </ul>
+    <h3>🧭 Як використати</h3>
+    <ul>
+      <li><b>Етап:</b> закріплення / узагальнення або усний рахунок із записом у зошит.</li>
+      <li><b>Обладнання:</b> проєктор/дошка для фронтальної роботи АБО планшети по групах.
+        Один HTML-файл, відкривається в будь-якому браузері, інтернет не обов'язковий.</li>
+      <li><b>Хід:</b> розминка «Який ти робот сьогодні?» (емоційне налаштування) → 5 рівнів
+        коміксу з боєм проти боса Глюка → Мегаскринька й рефлексія. За правильні відповіді —
+        кристали 💎.</li>
+      <li><b>Порада:</b> просіть учнів спочатку записати приклад/рівняння в зошит і обчислити,
+        а вже потім обирати відповідь на екрані — так гра не замінює, а підкріплює письмову роботу.</li>
+    </ul>
+    <h3>📝 Формувальне оцінювання</h3>
+    <ul>
+      <li>правильність обчислень (видно одразу за зворотним зв'язком);</li>
+      <li>пояснення прийому множення під час фронтального обговорення;</li>
+      <li>самооцінювання: «Який рівень був найлегшим / найскладнішим? Чому?».</li>
+    </ul>
+    <div style="text-align:center; margin-top:16px;">
+      <button class="btn cyan sm" onclick="closeTeacher()">Зрозуміло</button>
+    </div>
+  </div>
+</div>
+
+<div id="confetti"></div>
+
+<script>
+/* ============ ROBOT ART (original SVG characters) ============ */
+function robot(color, accent, mood){
+  const eyes={
+    happy:'<circle cx="38" cy="50" r="6" fill="#11203a"/><circle cx="62" cy="50" r="6" fill="#11203a"/><circle cx="40" cy="48" r="2" fill="#fff"/><circle cx="64" cy="48" r="2" fill="#fff"/>',
+    sad:'<path d="M32 48 q6 -5 12 0" stroke="#11203a" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M56 48 q6 -5 12 0" stroke="#11203a" stroke-width="4" fill="none" stroke-linecap="round"/>',
+    angry:'<path d="M30 44 l14 5" stroke="#11203a" stroke-width="4" stroke-linecap="round"/><path d="M70 44 l-14 5" stroke="#11203a" stroke-width="4" stroke-linecap="round"/><circle cx="38" cy="52" r="5" fill="#11203a"/><circle cx="62" cy="52" r="5" fill="#11203a"/>',
+    surprised:'<circle cx="38" cy="50" r="8" fill="#fff" stroke="#11203a" stroke-width="3"/><circle cx="62" cy="50" r="8" fill="#fff" stroke="#11203a" stroke-width="3"/><circle cx="38" cy="50" r="3.5" fill="#11203a"/><circle cx="62" cy="50" r="3.5" fill="#11203a"/>',
+    dreamy:'<path d="M32 50 q6 4 12 0" stroke="#11203a" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M56 50 q6 4 12 0" stroke="#11203a" stroke-width="4" fill="none" stroke-linecap="round"/><text x="74" y="38" font-size="14">✨</text>',
+    scared:'<circle cx="38" cy="50" r="9" fill="#fff" stroke="#11203a" stroke-width="3"/><circle cx="62" cy="50" r="9" fill="#fff" stroke="#11203a" stroke-width="3"/><circle cx="38" cy="52" r="3" fill="#11203a"/><circle cx="62" cy="52" r="3" fill="#11203a"/>',
+    worried:'<circle cx="38" cy="50" r="5" fill="#11203a"/><circle cx="62" cy="50" r="5" fill="#11203a"/><text x="70" y="40" font-size="13">💧</text>',
+    tired:'<path d="M31 50 h14" stroke="#11203a" stroke-width="4" stroke-linecap="round"/><path d="M55 50 h14" stroke="#11203a" stroke-width="4" stroke-linecap="round"/><text x="68" y="34" font-size="13">💤</text>',
+    cool:'<rect x="28" y="44" width="44" height="13" rx="6" fill="#11203a"/><circle cx="38" cy="50" r="3" fill="'+accent+'"/><circle cx="62" cy="50" r="3" fill="'+accent+'"/>'
+  };
+  const mouths={
+    happy:'<path d="M36 64 q14 14 28 0" stroke="#11203a" stroke-width="4" fill="none" stroke-linecap="round"/>',
+    sad:'<path d="M36 70 q14 -12 28 0" stroke="#11203a" stroke-width="4" fill="none" stroke-linecap="round"/>',
+    angry:'<rect x="38" y="64" width="24" height="7" rx="3" fill="#11203a"/>',
+    surprised:'<circle cx="50" cy="67" r="6" fill="#11203a"/>',
+    dreamy:'<path d="M40 66 q10 7 20 0" stroke="#11203a" stroke-width="4" fill="none" stroke-linecap="round"/>',
+    scared:'<path d="M38 66 q4 6 8 0 q4 6 8 0 q4 6 8 0" stroke="#11203a" stroke-width="3.5" fill="none"/>',
+    worried:'<path d="M38 67 h24" stroke="#11203a" stroke-width="4" stroke-linecap="round"/>',
+    tired:'<circle cx="50" cy="67" r="3.5" fill="#11203a"/>',
+    cool:'<path d="M38 64 q12 11 24 0" stroke="#11203a" stroke-width="4" fill="none" stroke-linecap="round"/>'
+  };
+  const e=eyes[mood]||eyes.happy, m=mouths[mood]||mouths.happy;
+  return '<svg viewBox="0 0 100 124" xmlns="http://www.w3.org/2000/svg">'+
+    '<line x1="50" y1="8" x2="50" y2="20" stroke="'+accent+'" stroke-width="4"/>'+
+    '<circle cx="50" cy="7" r="5" fill="'+accent+'"/>'+
+    '<rect x="12" y="48" width="9" height="24" rx="4" fill="'+accent+'"/>'+
+    '<rect x="79" y="48" width="9" height="24" rx="4" fill="'+accent+'"/>'+
+    '<rect x="20" y="20" width="60" height="62" rx="18" fill="'+color+'" stroke="#11203a" stroke-width="4"/>'+
+    '<rect x="28" y="34" width="44" height="40" rx="12" fill="#cfe9ff" stroke="#11203a" stroke-width="3"/>'+
+    e+m+
+    '<rect x="26" y="86" width="48" height="30" rx="12" fill="'+color+'" stroke="#11203a" stroke-width="4"/>'+
+    '<circle cx="50" cy="101" r="7" fill="'+accent+'" stroke="#11203a" stroke-width="3"/>'+
+    '</svg>';
+}
+
+/* ============ CHARACTERS ============ */
+const HERO   = robot('#9bff3c','#1fb6c4','cool');     // Множик
+const HEROINE= robot('#ff7fc4','#ffd23c','happy');    // Лічка
+const VILLAIN= robot('#ff5a5a','#7a0e0e','angry');    // Глюк
+
+/* ============ MOOD METER ============ */
+const MOODS=[
+  {nm:'Веселий',c:'#9bff3c',a:'#1fb6c4',m:'happy'},
+  {nm:'Сумний',c:'#7fb6ff',a:'#2a5cc4',m:'sad'},
+  {nm:'Злий',c:'#ff6a4d',a:'#7a0e0e',m:'angry'},
+  {nm:'Здивований',c:'#ffd23c',a:'#d49f00',m:'surprised'},
+  {nm:'Замріяний',c:'#c79bff',a:'#7a3ec4',m:'dreamy'},
+  {nm:'Наляканий',c:'#9be8ff',a:'#0fa6c4',m:'scared'},
+  {nm:'Заклопотаний',c:'#ffb86a',a:'#c47a00',m:'worried'},
+  {nm:'Втомлений',c:'#b6b6c4',a:'#5a5a7a',m:'tired'}
+];
+function buildMood(){
+  const g=document.getElementById('moodGrid'); g.innerHTML='';
+  MOODS.forEach((md,i)=>{
+    const d=document.createElement('div'); d.className='mood';
+    d.innerHTML=robot(md.c,md.a,md.m)+'<div class="nm">'+md.nm+'</div>';
+    d.onclick=()=>{ g.querySelectorAll('.mood').forEach(x=>x.classList.remove('sel'));
+      d.classList.add('sel'); document.getElementById('moodNext').disabled=false; };
+    g.appendChild(d);
+  });
+}
+
+/* ============ LEVEL DATA ============ */
+/* beats: [speaker, text]; speaker: hero|heroine|villain
+   tasks: {q, hint?, opts:[..], c:index} */
+const LEVELS=[
+ { title:'Секретний прийом множення', boss:false,
+   beats:[
+     ['hero','Глюк замкнув Мегаскриньку на математичний замок! Щоб пройти — треба множити числа виду 15 · 3.'],
+     ['heroine','Дивись, є секретний прийом! Розкладаємо: 15 · 3 = (10 + 5) · 3 = 10·3 + 5·3 = 30 + 15 = 45. Спробуй сам!']
+   ],
+   tasks:[
+     {q:'15 · 3 = ?', hint:'10·3 = 30, а 5·3 = 15. Додай: 30 + 15.', opts:['35','40','45','53'], c:2},
+     {q:'24 · 2 = ?', hint:'20·2 = 40, а 4·2 = 8. Додай: 40 + 8.', opts:['44','48','42','46'], c:1}
+   ]},
+ { title:'Тренування бот-команди', boss:false,
+   beats:[
+     ['heroine','Чудово! Тепер розімнемо команду роботів. Той самий прийом — і числа підкоряться!'],
+     ['hero','Розкладай на десятки й одиниці — і вперед!']
+   ],
+   tasks:[
+     {q:'13 · 3 = ?', hint:'10·3 = 30, 3·3 = 9.', opts:['33','36','39','29'], c:2},
+     {q:'21 · 4 = ?', hint:'20·4 = 80, 1·4 = 4.', opts:['84','80','88','24'], c:0}
+   ]},
+ { title:'Битва рівнянь', boss:true,
+   beats:[
+     ['villain','Ха-ха! Я сховав числа в РІВНЯННЯ! Знайдіть невідоме — якщо зможете, нікчемні боти!'],
+     ['hero','Легко, Глюче! Щоб знайти невідомий множник — ділимо. Щоб знайти невідоме ділене — множимо.']
+   ],
+   tasks:[
+     {q:'x · 3 = 45', hint:'Невідомий множник = добуток : відомий множник. 45 : 3.', opts:['x = 12','x = 15','x = 9','x = 48'], c:1},
+     {q:'48 : x = 6', hint:'Невідомий дільник = ділене : частку. 48 : 6.', opts:['x = 6','x = 7','x = 8','x = 9'], c:2}
+   ]},
+ { title:'Задача на складі роботів', boss:false,
+   beats:[
+     ['heroine','На складі роботів — справжня задача! Читай уважно й обирай дію.'],
+     ['hero','«Робот склав 15 ящиків, у кожному по 3 деталі.» Скільки деталей усього?']
+   ],
+   tasks:[
+     {q:'15 ящиків · 3 деталі = ?', hint:'Щоб знайти все — множимо: 15 · 3.', opts:['18 деталей','35 деталей','45 деталей','53 деталі'], c:2},
+     {q:'Ще задача: 4 полиці по 12 гвинтиків. Скільки всього?', hint:'12 · 4 = 10·4 + 2·4.', opts:['44','46','48','40'], c:2}
+   ]},
+ { title:'Фінал: читаємо діаграму', boss:true,
+   beats:[
+     ['villain','Останній замок — ДІАГРАМА! Вам нізащо не прочитати, скільки кристалів зібрали боти за тиждень!'],
+     ['heroine','А ось і прочитаємо! Висота стовпчика = кількість кристалів. Дивись на діаграму нижче ⬇️']
+   ],
+   diagram:true,
+   tasks:[
+     {q:'Хто зібрав НАЙБІЛЬШЕ кристалів?', opts:['Бот А','Бот Б','Бот В','Бот Г'], c:3},
+     {q:'Скільки разом зібрали Бот А і Бот В?', hint:'А = 30, В = 15. Додай.', opts:['40','45','50','30'], c:1},
+     {q:'На скільки Бот Г зібрав більше за Бот В?', hint:'Г = 60, В = 15. Відніми.', opts:['30','40','45','35'], c:2}
+   ]}
+];
+const CHARTDATA=[['Бот А',30,'#9bff3c'],['Бот Б',45,'#33e1ff'],['Бот В',15,'#ff4fa8'],['Бот Г',60,'#ffd23c']];
+
+/* ============ STATE ============ */
+let curLevel=0, beatIdx=0, taskIdx=0, gems=0;
+
+function startGame(){
+  document.getElementById('hud').style.display='flex';
+  buildMood(); renderPips();
+  show('s-mood');
+}
+function goLevel(n){
+  curLevel=n; beatIdx=0; taskIdx=0;
+  renderLevel();
+  show('s-level');
+}
+function renderPips(){
+  const bar=document.getElementById('lvlbar'); bar.innerHTML='';
+  for(let i=0;i<5;i++){ const p=document.createElement('div'); p.className='pip'+(i<curLevel?' on':''); bar.appendChild(p); }
+}
+function renderLevel(){
+  const L=LEVELS[curLevel];
+  document.getElementById('lvBadge').textContent='РІВЕНЬ '+(curLevel+1);
+  document.getElementById('lvTitle').textContent=L.title;
+  document.getElementById('taskHost').innerHTML='';
+  renderPips();
+  renderBeat();
+}
+function actorSVG(who){ return who==='hero'?HERO : who==='heroine'?HEROINE : VILLAIN; }
+function whoName(who){ return who==='hero'?'МНОЖИК' : who==='heroine'?'ЛІЧКА' : 'ГЛЮК'; }
+
+function renderBeat(){
+  const L=LEVELS[curLevel];
+  const beat=L.beats[beatIdx];
+  const who=beat[0], side = who==='villain'?'right':'left';
+  const scene=document.getElementById('scene');
+  const actorHtml='<div class="actor">'+actorSVG(who)+'</div>';
+  const bubble='<div class="bubble '+side+'"><span class="who '+who+'">'+whoName(who)+'</span>'+beat[1]+'</div>';
+  scene.innerHTML = side==='right' ? bubble+actorHtml : actorHtml+bubble;
+  const foot=document.getElementById('sceneFoot');
+  foot.innerHTML='';
+  const b=document.createElement('button'); b.className='btn cyan sm';
+  if(beatIdx < L.beats.length-1){ b.textContent='Далі ▶'; b.onclick=()=>{beatIdx++; renderBeat();}; }
+  else { b.textContent='⚔️ До завдання!'; b.onclick=()=>{ foot.innerHTML=''; renderTask(); }; }
+  foot.appendChild(b);
+}
+
+function renderTask(){
+  const L=LEVELS[curLevel];
+  const t=L.tasks[taskIdx];
+  const host=document.getElementById('taskHost');
+  let chart='';
+  if(L.diagram){ chart=buildChart(); }
+  host.innerHTML =
+    (L.diagram?'<div class="chart">'+chart+'</div>':'')+
+    '<div class="task">'+
+      '<div class="qtag">ЗАВДАННЯ '+(taskIdx+1)+' / '+L.tasks.length+(L.boss?' · БОС ГЛЮК':'')+'</div>'+
+      '<div class="q">'+t.q+'</div>'+
+      (t.hint?'<div class="hintbox">💡 '+t.hint+'</div>':'')+
+      '<div class="answers" id="ansBox"></div>'+
+      '<div class="fb" id="fb"></div>'+
+      '<div class="progress-q">💎 Правильна відповідь = +1 кристал</div>'+
+    '</div>';
+  const box=document.getElementById('ansBox');
+  shuffle(t.opts.map((o,i)=>({o,i}))).forEach(item=>{
+    const b=document.createElement('button'); b.className='ans'; b.textContent=item.o;
+    b.onclick=()=>{
+      if(item.i===t.c){
+        b.classList.add('correct');
+        box.querySelectorAll('.ans').forEach(x=>x.classList.add('lock'));
+        addGem(); fb('Влучно! +1 💎','ok'); burst(12);
+        setTimeout(()=>{
+          taskIdx++;
+          if(taskIdx<L.tasks.length){ renderTask(); }
+          else { nextLevel(); }
+        },950);
+      } else {
+        b.classList.add('wrong'); fb('Помилка! Порахуй ще раз у зошиті.','no');
+        setTimeout(()=>b.classList.remove('wrong'),420);
+      }
+    };
+    box.appendChild(b);
+  });
+}
+function nextLevel(){
+  curLevel++;
+  if(curLevel<LEVELS.length){ beatIdx=0; taskIdx=0; renderLevel(); }
+  else { finish(); }
+}
+function addGem(){ gems++; document.getElementById('gemCount').textContent=gems; }
+
+/* ---- diagram ---- */
+function buildChart(){
+  const W=380,H=190,pad=34,base=H-28,maxV=60,bw=54,gap=28;
+  let bars='',axis='';
+  for(let g=0; g<=60; g+=15){
+    const y=base-(g/maxV)*(base-20);
+    axis+='<line x1="'+pad+'" y1="'+y+'" x2="'+(W-10)+'" y2="'+y+'" stroke="#d7d0ea" stroke-width="1"/>'+
+          '<text x="'+(pad-6)+'" y="'+(y+4)+'" font-size="11" fill="#7a6fa0" text-anchor="end" font-family="Nunito" font-weight="800">'+g+'</text>';
+  }
+  CHARTDATA.forEach((d,i)=>{
+    const x=pad+18+i*(bw+gap);
+    const h=(d[1]/maxV)*(base-20);
+    const y=base-h;
+    bars+='<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="'+h+'" rx="6" fill="'+d[2]+'" stroke="#160a35" stroke-width="3"/>'+
+          '<text x="'+(x+bw/2)+'" y="'+(y-7)+'" font-size="14" fill="#160a35" text-anchor="middle" font-family="Luckiest Guy">'+d[1]+'</text>'+
+          '<text x="'+(x+bw/2)+'" y="'+(base+16)+'" font-size="12" fill="#160a35" text-anchor="middle" font-family="Nunito" font-weight="800">'+d[0]+'</text>';
+  });
+  return '<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">'+
+    '<text x="'+(W/2)+'" y="14" font-size="13" fill="#160a35" text-anchor="middle" font-family="Luckiest Guy">КРИСТАЛИ, ЗІБРАНІ БОТАМИ 💎</text>'+
+    axis+'<line x1="'+pad+'" y1="'+base+'" x2="'+(W-10)+'" y2="'+base+'" stroke="#160a35" stroke-width="3"/>'+bars+'</svg>';
+}
+
+/* ---- finish ---- */
+function finish(){
+  show('s-final');
+  document.getElementById('finalGems').textContent=gems;
+  const c=document.getElementById('chestIcon'); c.textContent='🎁';
+  setTimeout(()=>c.textContent='🏆',500);
+  renderPips(); burst(70);
+}
+function restart(){
+  curLevel=0; beatIdx=0; taskIdx=0; gems=0;
+  document.getElementById('gemCount').textContent='0';
+  buildMood(); document.getElementById('moodNext').disabled=true;
+  renderPips(); show('s-mood');
+}
+
+/* ============ HELPERS ============ */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function fb(txt,type){ const el=document.getElementById('fb'); if(el){el.textContent=txt; el.className='fb '+(type||'');} }
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;}
+function openTeacher(){document.getElementById('teacherModal').classList.add('show');}
+function closeTeacher(){document.getElementById('teacherModal').classList.remove('show');}
+document.getElementById('teacherModal').addEventListener('click',e=>{if(e.target.id==='teacherModal')closeTeacher();});
+
+/* title heroes */
+document.getElementById('titleHeroes').innerHTML=HERO+VILLAIN+HEROINE;
+
+/* confetti */
+function burst(count){
+  const box=document.getElementById('confetti');
+  const cols=['#9bff3c','#33e1ff','#ff4fa8','#ffd23c','#fff'];
+  for(let i=0;i<count;i++){
+    const c=document.createElement('div'); c.className='conf';
+    c.style.background=cols[i%cols.length];
+    c.style.left=Math.random()*100+'vw'; c.style.top='-20px';
+    c.style.borderRadius=Math.random()<.5?'50%':'2px';
+    box.appendChild(c);
+    const dur=1500+Math.random()*1400, x=(Math.random()-.5)*280, r=Math.random()*720;
+    c.animate([{transform:'translate(0,0) rotate(0)',opacity:1},
+      {transform:'translate('+x+'px,'+(window.innerHeight+60)+'px) rotate('+r+'deg)',opacity:1}],
+      {duration:dur,easing:'cubic-bezier(.3,.6,.5,1)'});
+    setTimeout(()=>c.remove(),dur);
+  }
+}
+</script>
+</body>
+</html>
